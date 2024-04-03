@@ -15,7 +15,7 @@ import transformers
 import time
 
 load_dotenv(find_dotenv())
-EXPERIMENT = "Reviews_Classification"
+EXPERIMENT = "llm-baseline"
 mlflow.set_experiment(EXPERIMENT)
 mlflow.pytorch.autolog()
 
