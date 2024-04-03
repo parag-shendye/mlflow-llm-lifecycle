@@ -5,7 +5,7 @@ from transformers import (
     AutoTokenizer
 )
 import pandas as pd
-from utils import Trainer, add_labels, get_gpu, load_data_from_uri, set_training_arguments, tokenize_function
+from utils import Trainer, get_gpu, load_data_from_uri, set_training_arguments, tokenize_function
 
 warnings.filterwarnings("ignore")
 
@@ -30,8 +30,6 @@ def preprocess_data(uri:str, tokenizer: AutoTokenizer):
     batch_size=1,
     drop_last_batch=True
     )
-    import pdb
-    pdb.set_trace()
     # tokenized_data.map(add_labels)
     split_dataset = tokenized_data["train"].train_test_split(test_size=0.1, shuffle=True, seed=123)
     return split_dataset
