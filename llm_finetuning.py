@@ -21,11 +21,14 @@ def get_model_from_huggingface(uri:str):
     
     return model, tokenizer
 
+def formatfunc(examples):
+    return f"""###INPUT: {examples['instruction']} ###OUTPUT: {examples['output']}"""
+
 def preprocess_data(uri:str, tokenizer: AutoTokenizer):
     data = load_data_from_uri(uri)
     # tokenize_func = tokenize_function(tokenizer=tokenizer)
     tokenized_data = data.map(
-    tokenize_function(tokenizer),
+    tokenize_function(tokenizer, formatfunc),
     batched=True,
     batch_size=1,
     drop_last_batch=True
@@ -38,7 +41,7 @@ if __name__ == "__main__":
     model, tokenizer = get_model_from_huggingface("EleutherAI/pythia-70m")
     dev = get_gpu()
     model.to(dev)
-    dataset = preprocess_data("BashitAli/Indian_history", tokenizer=tokenizer)
+    dataset = preprocess_data("sahil2801/CodeAlpaca-20k", tokenizer=tokenizer)
     print(dataset)
     max_steps = 10
     ta = set_training_arguments(max_steps=max_steps)
@@ -52,6 +55,7 @@ if __name__ == "__main__":
     )
     * ta.gradient_accumulation_steps
     )
+    #TODO: add lora possibility
     trainer = Trainer(model, model_flops=model_flops, total_steps=max_steps, args=ta, train_dataset=dataset["train"], eval_dataset=dataset["test"])
     trainer.train()
     

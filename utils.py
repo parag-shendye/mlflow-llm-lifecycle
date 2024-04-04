@@ -31,18 +31,9 @@ def load_data_from_uri(uri: Optional[str]):
     return None
 
 
-def tokenize_function(tokenizer):
+def tokenize_function(tokenizer, func):
     def tokenize(examples):
-        if "question" in examples and "answer" in examples:
-            text = examples["question"][0] + examples["answer"][0]
-        elif "input" in examples and "output" in examples:
-            text = examples["input"][0] + examples["output"][0]
-        elif "Question" in examples and "Answer" in examples:
-            text = examples["Question"][0] + examples["Answer"][0]
-        elif "instruction" in examples and "response" in examples:
-            text = examples["instruction"][0] + examples["response"][0]
-        else:
-            text = examples["text"][0]
+        text = func(examples)
 
         tokenizer.pad_token = tokenizer.eos_token
         tokenized_inputs = tokenizer(
